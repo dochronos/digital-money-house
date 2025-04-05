@@ -7,8 +7,13 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormError } from "@/components/ui/FormError";
+import { useCardStore } from "@/store/cardStore";
+import { toast } from "sonner";
+
 
 export const CardForm = () => {
+  const { setCard } = useCardStore();
+
   const {
     register,
     handleSubmit,
@@ -18,7 +23,8 @@ export const CardForm = () => {
   });
 
   const onSubmit = (data: CardFormSchema) => {
-    console.log("Card data:", data);
+    setCard(data);
+    toast.success("Tarjeta guardada correctamente");
   };
 
   return (
