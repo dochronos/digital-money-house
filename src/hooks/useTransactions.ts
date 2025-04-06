@@ -1,27 +1,35 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { TransactionType } from "@/types/transaction.types";
 
 const ITEMS_PER_PAGE = 10;
 
 const useTransactions = (allTransactions: TransactionType[]) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const initialSearch = searchParams.get("search") || "";
-  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionType[]>([]);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-  // Filtrar cuando cambia el searchTerm o allTransactions
+  // Aplicar filtros y búsqueda
   useEffect(() => {
-    const filtered = allTransactions.filter((t) =>
-      t.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    let filtered = allTransactions;
+
+    if (searchTerm.trim()) {
+      filtered = filtered.filter((t) =>
+        t.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (activeFilters.length > 0) {
+      filtered = filtered.filter((t) => activeFilters.includes(t.type));
+    }
+
     setFilteredTransactions(filtered);
-    setCurrentPage(1); // Reiniciar página al filtrar
-  }, [searchTerm, allTransactions]);
+    setCurrentPage(1); // Reiniciar a la primera página cada vez que se filtra
+  }, [searchTerm, allTransactions, activeFilters]);
 
   const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
   const paginatedTransactions = filteredTransactions.slice(
@@ -31,19 +39,13 @@ const useTransactions = (allTransactions: TransactionType[]) => {
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      redirectToActivityPage();
+      if (searchTerm.trim().length > 0) {
+        router.push(`/dashboard/activity?search=${searchTerm}`);
+      }
     }
   };
 
-  const redirectToActivityPage = () => {
-    if (searchTerm.trim().length > 0) {
-      router.push(`/dashboard/activity?search=${searchTerm}`);
-    }
-  };
-
-  const changePage = (page: number) => {
-    setCurrentPage(page);
-  };
+  const changePage = (page: number) => setCurrentPage(page);
 
   return {
     searchTerm,
@@ -53,6 +55,8 @@ const useTransactions = (allTransactions: TransactionType[]) => {
     changePage,
     paginatedTransactions,
     totalPages,
+    activeFilters,
+    setActiveFilters,
   };
 };
 
