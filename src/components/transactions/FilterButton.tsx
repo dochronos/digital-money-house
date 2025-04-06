@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/Button";
 import FilterIcon from "@/components/common/Icons/FilterIcon";
 
@@ -7,18 +5,16 @@ type FilterButtonProps = {
   onClick?: () => void;
 };
 
-const FilterButton = ({ onClick }: FilterButtonProps) => {
+export default function FilterButton({ onClick }: FilterButtonProps) {
   return (
     <div className="hidden md:block rounded-xl bg-green shadow-sm">
       <Button
+        className="w-full gap-16 flex justify-between p-5 items-center"
         onClick={onClick}
-        className="w-full gap-16 flex justify-between p-5 items-center text-black text-base font-bold"
       >
-        Filtrar
+        <span className="text-black text-base font-bold">Filtrar</span>
         <FilterIcon />
       </Button>
     </div>
   );
-};
-
-export default FilterButton;
+}
