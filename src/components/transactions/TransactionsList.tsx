@@ -2,11 +2,12 @@
 
 import SearchIcon from "@/components/common/Icons/SearchIcon";
 import ArrowIcon from "@/components/common/Icons/ArrowIcon";
-import FilterIcon from "@/components/common/Icons/FilterIcon";
 import Link from "next/link";
 import { TransactionType } from "@/types/transaction.types";
 import useTransactions from "@/hooks/useTransactions";
 import TransactionItem from "@/components/transactions/TransactionItem";
+import Pagination from "@/components/transactions/Pagination";
+import FilterButton from "@/components/transactions/FilterButton";
 
 type TransactionsListProps = {
   transactionsList: TransactionType[];
@@ -42,14 +43,7 @@ const TransactionsList = ({
           />
         </div>
 
-        {showActivityPage && (
-          <div className="hidden md:block rounded-xl bg-green shadow-sm">
-            <button className="w-full gap-16 flex justify-between p-5 items-center">
-              <span className="text-black text-base font-bold">Filtrar</span>
-              <FilterIcon />
-            </button>
-          </div>
-        )}
+        {showActivityPage && <FilterButton />}
       </section>
 
       <section className="w-full p-5 md:py-10 md:px-8 xl:px-12 flex flex-col rounded-xl bg-white text-dark1 shadow-md mt-4">
@@ -80,23 +74,11 @@ const TransactionsList = ({
         )}
 
         {showActivityPage && totalPages > 1 && (
-          <div className="flex justify-center mt-5 space-x-2">
-            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-              (page) => (
-                <button
-                  key={page}
-                  className={`px-3 py-1 rounded-md text-sm font-semibold transition-all ${
-                    page === currentPage
-                      ? "bg-gray-300 text-black"
-                      : "bg-white text-dark1"
-                  }`}
-                  onClick={() => changePage(page)}
-                >
-                  {page}
-                </button>
-              )
-            )}
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={changePage}
+          />
         )}
       </section>
     </>
