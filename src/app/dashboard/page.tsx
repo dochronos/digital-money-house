@@ -1,15 +1,13 @@
 "use client";
 
 import TransactionsList from "@/components/transactions/TransactionsList";
-import { transactionsMock } from "@/mocks/transactionsMocks";
+import useFetchTransactions from "@/hooks/useFetchTransactions";
 
 export default function DashboardPage() {
-  return (
-    <main className="p-4">
-      <TransactionsList
-        transactionsList={transactionsMock}
-        showActivityPage={false}
-      />
-    </main>
-  );
+  const { transactions, loading, error } = useFetchTransactions();
+
+  if (loading) return <p>Cargando transacciones...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return <TransactionsList transactionsList={transactions} showActivityPage={false} />;
 }
