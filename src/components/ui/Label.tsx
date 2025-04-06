@@ -1,12 +1,13 @@
-import React from "react";
+import { LabelHTMLAttributes } from "react";
+import clsx from "clsx";
 
-type LabelProps = {
-  htmlFor: string;
-  children: React.ReactNode;
+interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}
+
+export const Label = ({ className, ...props }: LabelProps) => {
+  return (
+    <label
+      className={clsx("text-sm font-semibold text-white", className)}
+      {...props}
+    />
+  );
 };
-
-export const Label = ({ htmlFor, children }: LabelProps) => (
-  <label htmlFor={htmlFor} className="text-sm font-semibold text-white">
-    {children}
-  </label>
-);

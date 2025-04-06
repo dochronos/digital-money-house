@@ -11,11 +11,8 @@ import { useCardStore } from "@/store/cardStore";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-
-
 export const CardForm = () => {
   const router = useRouter();
-
   const { setCard } = useCardStore();
 
   const {
@@ -33,7 +30,10 @@ export const CardForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-6 rounded-xl border border-gray-800 bg-secondary p-6 shadow-md"
+    >
       <div>
         <Label htmlFor="cardNumber">Número de tarjeta</Label>
         <Input id="cardNumber" {...register("cardNumber")} />
@@ -46,7 +46,32 @@ export const CardForm = () => {
         <FormError message={errors.cardHolder?.message} />
       </div>
 
-      <Button type="submit">Guardar tarjeta</Button>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="expiryDate">Vencimiento (MM/AA)</Label>
+          <Input
+            id="expiryDate"
+            placeholder="MM/AA"
+            {...register("expiryDate")}
+          />
+          <FormError message={errors.expiryDate?.message} />
+        </div>
+
+        <div>
+          <Label htmlFor="cvv">CVV</Label>
+          <Input
+            id="cvv"
+            type="password"
+            placeholder="•••"
+            {...register("cvv")}
+          />
+          <FormError message={errors.cvv?.message} />
+        </div>
+      </div>
+
+      <Button type="submit" className="w-full">
+        Guardar tarjeta
+      </Button>
     </form>
   );
 };
