@@ -13,11 +13,13 @@ import Filter from "./Filter";
 type TransactionsListProps = {
   transactionsList: TransactionType[];
   showActivityPage: boolean;
+  initialSearchTerm?: string;
 };
 
 const TransactionsList = ({
   transactionsList,
   showActivityPage,
+  initialSearchTerm = "",
 }: TransactionsListProps) => {
   const {
     searchTerm,
@@ -27,7 +29,8 @@ const TransactionsList = ({
     changePage,
     paginatedTransactions,
     totalPages,
-  } = useTransactions(transactionsList);
+  } = useTransactions(transactionsList, initialSearchTerm);
+
 
   const getWeekday = (dateString: string): string => {
     const date = new Date(dateString);
