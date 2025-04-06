@@ -9,9 +9,11 @@ export default function useFetchTransactions() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/transactions"); // <-- Ajusta esta URL si es necesario
-        if (!res.ok) throw new Error("Error al obtener las transacciones");
-        const data = await res.json();
+        const response = await fetch("http://localhost:8080/api/transactions");
+        if (!response.ok) {
+          throw new Error("Error al obtener las transacciones");
+        }
+        const data = await response.json();
         setTransactions(data);
       } catch (err: any) {
         setError(err.message);
