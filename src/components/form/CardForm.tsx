@@ -9,9 +9,13 @@ import { Label } from "@/components/ui/Label";
 import { FormError } from "@/components/ui/FormError";
 import { useCardStore } from "@/store/cardStore";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 
 
 export const CardForm = () => {
+  const router = useRouter();
+
   const { setCard } = useCardStore();
 
   const {
@@ -25,6 +29,7 @@ export const CardForm = () => {
   const onSubmit = (data: CardFormSchema) => {
     setCard(data);
     toast.success("Tarjeta guardada correctamente");
+    router.push("/card");
   };
 
   return (
