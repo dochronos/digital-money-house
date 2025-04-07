@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import TransactionsList from "@/components/transactions/TransactionsList";
 import { TransactionType } from "@/types/transaction.types";
 import useTransactions from "@/hooks/useTransactions";
+import Loader from "@/components/common/Loader"; // ✅ Importamos el Loader
 
 export default function DashboardPage() {
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
@@ -25,7 +26,6 @@ export default function DashboardPage() {
     fetchTransactions();
   }, []);
 
-  // 👇 Le pasamos un término de búsqueda inicial para filtrar, opcional
   const {
     searchTerm,
     setSearchTerm,
@@ -37,14 +37,14 @@ export default function DashboardPage() {
     activeFilters,
     setActiveFilters,
   } = useTransactions(transactions, {
-    initialSearchTerm: "", // Cambiá este valor si querés hacer una búsqueda inicial específica
+    initialSearchTerm: "", // Puede ajustarse si querés setear una búsqueda inicial
   });
 
   return (
     <div className="p-5 md:p-8 xl:p-12">
       <h1 className="text-2xl font-bold mb-6">Resumen</h1>
       {loading ? (
-        <p>Cargando transacciones...</p>
+        <Loader /> // ✅ Usamos el spinner animado
       ) : (
         <TransactionsList
           transactionsList={transactions}

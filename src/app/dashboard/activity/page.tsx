@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import TransactionsList from "@/components/transactions/TransactionsList";
 import { TransactionType } from "@/types/transaction.types";
+import Loader from "@/components/common/Loader";
 
 export default function ActivityPage() {
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [loading, setLoading] = useState(true);
+
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
 
@@ -31,7 +33,9 @@ export default function ActivityPage() {
     <div className="p-5 md:p-8 xl:p-12">
       <h1 className="text-2xl font-bold mb-6">Actividad completa</h1>
       {loading ? (
-        <p>Cargando transacciones...</p>
+        <div className="flex justify-center">
+          <Loader />
+        </div>
       ) : (
         <TransactionsList
           transactionsList={transactions}
