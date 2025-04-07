@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Utilidades personalizadas */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Variables o estilos base adicionales que podrías querer centralizar */
+:root {
+  /* Colores personalizados, si tenés definidos */
+  /* --color-primary: #22c55e; */
+}
+
+/* Puedes agregar estilos globales personalizados aquí si es necesario */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-dark1 text-white;
+}
