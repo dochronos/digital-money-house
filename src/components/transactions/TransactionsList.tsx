@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import TransactionItem from "./TransactionItem";
+import TransactionItem from "./transactionItem";
 import Pagination from "./Pagination";
 import FilterButton from "./FilterButton";
 import SearchInput from "../common/SearchInput";
@@ -12,17 +11,15 @@ type TransactionsListProps = {
   transactionsList: TransactionType[];
   showActivityPage?: boolean;
   initialSearchTerm?: string;
+  initialFilters?: string[];
 };
 
 export default function TransactionsList({
   transactionsList,
   showActivityPage = false,
   initialSearchTerm = "",
+  initialFilters = [],
 }: TransactionsListProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const urlFilters = searchParams.getAll("filter");
-
   const {
     searchTerm,
     setSearchTerm,
@@ -32,32 +29,15 @@ export default function TransactionsList({
     paginatedTransactions,
     totalPages,
     activeFilters,
-    setActiveFilters,
+    toggleFilter,
   } = useTransactions(transactionsList, {
     initialSearchTerm,
-    initialFilters: urlFilters,
+    initialFilters,
   });
 
-  // Filtros disponibles según los tipos únicos en la data
   const availableFilters = Array.from(
     new Set(transactionsList.map((tx) => tx.type))
   );
-
-  // Sincronizar filtros con la URL
-  const toggleFilter = (filter: string) => {
-    const updatedFilters = activeFilters.includes(filter)
-      ? activeFilters.filter((f) => f !== filter)
-      : [...activeFilters, filter];
-
-    setActiveFilters(updatedFilters);
-
-    const newParams = new URLSearchParams(searchParams.toString());
-
-    newParams.delete("filter");
-    updatedFilters.forEach((f) => newParams.append("filter", f));
-
-    router.push(`${window.location.pathname}?${newParams.toString()}`);
-  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -107,4 +87,3 @@ export default function TransactionsList({
     </div>
   );
 }
-
