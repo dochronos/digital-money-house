@@ -5,13 +5,16 @@ import { TransactionType } from "@/types/transaction.types";
 
 const ITEMS_PER_PAGE = 10;
 
+type UseTransactionsOptions = {
+  initialSearchTerm?: string;
+};
+
 const useTransactions = (
   allTransactions: TransactionType[],
-  initialSearchTerm: string = ""
+  options: UseTransactionsOptions = {}
 ) => {
   const router = useRouter();
-
-  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  const [searchTerm, setSearchTerm] = useState(options.initialSearchTerm || "");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionType[]>([]);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
