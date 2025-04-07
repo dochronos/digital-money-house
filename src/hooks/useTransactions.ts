@@ -1,25 +1,24 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { TransactionType } from "@/types/transaction.types";
 
 const ITEMS_PER_PAGE = 10;
 
-type UseTransactionsOptions = {
-  initialSearchTerm?: string;
-};
-
-const useTransactions = (
-  allTransactions: TransactionType[],
-  options: UseTransactionsOptions = {}
-) => {
+const useTransactions = (allTransactions: TransactionType[]) => {
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState(options.initialSearchTerm || "");
+  const searchParams = useSearchParams();
+
+  // 🟡 Obtener valores iniciales desde la URL
+  const initialSearch = searchParams.get("search") || "";
+  const initialTypes = searchParams.getAll("type");
+
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [activeFilters, setActiveFilters] = useState<string[]>(initialTypes);
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredTransactions, setFilteredTransactions] = useState<TransactionType[]>([]);
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-  // Aplicar filtros y búsqueda
+  // 🟢 Filtrado según búsqueda y filtros activos
   useEffect(() => {
     let filtered = allTransactions;
 
@@ -34,7 +33,7 @@ const useTransactions = (
     }
 
     setFilteredTransactions(filtered);
-    setCurrentPage(1); // Reiniciar a la primera página cada vez que se filtra
+    setCurrentPage(1);
   }, [searchTerm, allTransactions, activeFilters]);
 
   const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
@@ -43,12 +42,37 @@ const useTransactions = (
     currentPage * ITEMS_PER_PAGE
   );
 
+  // 🟠 Buscar al presionar Enter y actualizar la URL
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (searchTerm.trim().length > 0) {
-        router.push(`/dashboard/activity?search=${searchTerm}`);
-      }
+      updateURL(searchTerm, activeFilters);
     }
+  };
+
+  // 🔵 Cambiar filtros y actualizar URL
+  const toggleFilter = (filter: string) => {
+    let updatedFilters: string[];
+    if (activeFilters.includes(filter)) {
+      updatedFilters = activeFilters.filter((f) => f !== filter);
+    } else {
+      updatedFilters = [...activeFilters, filter];
+    }
+
+    setActiveFilters(updatedFilters);
+    updateURL(searchTerm, updatedFilters);
+  };
+
+  // 🧠 Función para actualizar la URL
+  const updateURL = (search: string, filters: string[]) => {
+    const params = new URLSearchParams();
+
+    if (search.trim()) {
+      params.set("search", search);
+    }
+
+    filters.forEach((f) => params.append("type", f));
+
+    router.push(`/dashboard?${params.toString()}`);
   };
 
   const changePage = (page: number) => setCurrentPage(page);
@@ -62,7 +86,7 @@ const useTransactions = (
     paginatedTransactions,
     totalPages,
     activeFilters,
-    setActiveFilters,
+    toggleFilter, // ← importante: usar esto en vez de setActiveFilters directo
   };
 };
 

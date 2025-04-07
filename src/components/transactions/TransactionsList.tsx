@@ -1,26 +1,28 @@
 "use client";
 
-import SearchIcon from "@/components/common/Icons/SearchIcon";
-import ArrowIcon from "@/components/common/Icons/ArrowIcon";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { TransactionType } from "@/types/transaction.types";
-import useTransactions from "@/hooks/useTransactions";
+import { useRouter, useSearchParams } from "next/navigation";
 import TransactionItem from "./TransactionItem";
 import Pagination from "./Pagination";
-import Filter from "./Filter";
+import FilterButton from "./FilterButton";
+import SearchInput from "../common/SearchInput";
+import { TransactionType } from "@/types/transaction.types";
+import useTransactions from "@/hooks/useTransactions";
 
 type TransactionsListProps = {
   transactionsList: TransactionType[];
-  showActivityPage: boolean;
+  showActivityPage?: boolean;
   initialSearchTerm?: string;
 };
 
-const TransactionsList = ({
+export default function TransactionsList({
   transactionsList,
-  showActivityPage,
+  showActivityPage = false,
   initialSearchTerm = "",
-}: TransactionsListProps) => {
+}: TransactionsListProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlFilters = searchParams.getAll("filter");
+
   const {
     searchTerm,
     setSearchTerm,
@@ -29,85 +31,80 @@ const TransactionsList = ({
     changePage,
     paginatedTransactions,
     totalPages,
-  } = useTransactions(transactionsList, initialSearchTerm);
+    activeFilters,
+    setActiveFilters,
+  } = useTransactions(transactionsList, {
+    initialSearchTerm,
+    initialFilters: urlFilters,
+  });
 
+  // Filtros disponibles según los tipos únicos en la data
+  const availableFilters = Array.from(
+    new Set(transactionsList.map((tx) => tx.type))
+  );
 
-  const getWeekday = (dateString: string): string => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { weekday: "long" };
-    return new Intl.DateTimeFormat("es-ES", options).format(date);
-  };
+  // Sincronizar filtros con la URL
+  const toggleFilter = (filter: string) => {
+    const updatedFilters = activeFilters.includes(filter)
+      ? activeFilters.filter((f) => f !== filter)
+      : [...activeFilters, filter];
 
-  const handleFilterApply = (filters: Record<string, string>) => {
-    console.log("Filtros aplicados:", filters);
-    // Aquí luego podés integrar lógica real de filtrado con estado global o hook
+    setActiveFilters(updatedFilters);
+
+    const newParams = new URLSearchParams(searchParams.toString());
+
+    newParams.delete("filter");
+    updatedFilters.forEach((f) => newParams.append("filter", f));
+
+    router.push(`${window.location.pathname}?${newParams.toString()}`);
   };
 
   return (
-    <>
-      {/* Search + Optional Filter */}
-      <section className="w-full flex items-center gap-5">
-        <div className="w-full flex items-center gap-5 p-5 md:px-8 md:gap-8 xl:px-12 bg-white border border-gray-200 rounded-xl shadow-sm">
-          <SearchIcon />
-          <input
-            className="text-black/50 text-base w-full outline-none md:text-[18px]"
-            type="text"
-            placeholder="Buscar en tu actividad"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={handleSearch}
-          />
-        </div>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <SearchInput
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleSearch}
+        />
+        <FilterButton
+          availableFilters={availableFilters}
+          activeFilters={activeFilters}
+          toggleFilter={toggleFilter}
+        />
+      </div>
 
-        {showActivityPage && (
-          <div className="hidden md:block">
-            <Filter onFilterApply={handleFilterApply} />
-          </div>
-        )}
-      </section>
+      <ul className="flex flex-col gap-4">
+        {paginatedTransactions.map((transaction) => (
+          <TransactionItem key={transaction.id} transaction={transaction} />
+        ))}
+      </ul>
 
-      {/* Listado de transacciones */}
-      <section className="w-full p-5 md:py-10 md:px-8 xl:px-12 flex flex-col rounded-xl bg-white text-dark1 shadow-md mt-4">
-        <h2 className="text-base font-bold border-b border-gray-300 pb-5">
-          Tu actividad
-        </h2>
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={changePage}
+        />
+      )}
 
-        {paginatedTransactions.length === 0 ? (
-          <p className="text-gray-500 mt-4">No hay movimientos en tu cuenta.</p>
-        ) : (
-          <ul className="w-full">
-            {paginatedTransactions.map((transaction) => (
-              <TransactionItem
-                key={transaction.id}
-                transaction={transaction}
-                getWeekday={getWeekday}
-              />
-            ))}
-          </ul>
-        )}
+      {!paginatedTransactions.length && (
+        <p className="text-center text-gray-500 mt-6">
+          No se encontraron transacciones.
+        </p>
+      )}
 
-        {!showActivityPage && (
-          <Link
+      {!showActivityPage && (
+        <div className="text-center mt-4">
+          <a
             href="/dashboard/activity"
-            className="flex justify-between items-center mt-6"
+            className="text-green font-medium hover:underline"
           >
-            <p className="text-sm md:text-base text-dark1 font-bold">
-              Ver toda tu actividad
-            </p>
-            <ArrowIcon className="fill-black/70 w-4" />
-          </Link>
-        )}
-
-        {showActivityPage && totalPages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            changePage={changePage}
-          />
-        )}
-      </section>
-    </>
+            Ver toda la actividad
+          </a>
+        </div>
+      )}
+    </div>
   );
-};
+}
 
-export default TransactionsList;
