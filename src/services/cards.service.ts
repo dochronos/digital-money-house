@@ -1,6 +1,12 @@
+import { CardType } from "@/types/card.types";
+
 const BASE_URL = "https://digitalmoney.digitalhouse.com/api";
 
-export const getAllCards = async (accountId: number, token: string) => {
+// GET - Obtener todas las tarjetas
+export const getAllCards = async (
+  accountId: number,
+  token: string
+): Promise<CardType[]> => {
   try {
     if (!token || !accountId) {
       throw new Error("Token o accountId no válidos");
@@ -20,18 +26,19 @@ export const getAllCards = async (accountId: number, token: string) => {
     }
 
     const cards = await response.json();
-    return Array.isArray(cards) ? cards : [];
+    return Array.isArray(cards) ? cards as CardType[] : [];
   } catch (error: any) {
     console.error("Error fetching cards:", error.message);
     return [];
   }
 };
 
+// GET - Obtener tarjeta por ID
 export const getCardId = async (
   accountId: number,
   cardId: number,
   token: string
-) => {
+): Promise<CardType> => {
   try {
     const response = await fetch(
       `${BASE_URL}/accounts/${accountId}/cards/${cardId}`,
@@ -58,6 +65,7 @@ export const getCardId = async (
   }
 };
 
+// POST - Crear nueva tarjeta
 export const newCard = async (
   accountId: number,
   token: string,
@@ -67,7 +75,7 @@ export const newCard = async (
     cvc: string;
     name?: string;
   }
-) => {
+): Promise<CardType> => {
   try {
     if (!token || !accountId) {
       throw new Error("Token o accountId no válidos");
@@ -75,7 +83,7 @@ export const newCard = async (
 
     const body = {
       ...cardData,
-      name: cardData.name || "Juan Perez",
+      name: cardData.name || "Juan Perez", // Nombre por defecto
     };
 
     const response = await fetch(`${BASE_URL}/accounts/${accountId}/cards`, {
@@ -99,11 +107,12 @@ export const newCard = async (
   }
 };
 
+// DELETE - Eliminar tarjeta por ID
 export const deleteCardId = async (
   accountId: number,
   cardId: number,
   token: string
-) => {
+): Promise<boolean> => {
   try {
     if (!token || !accountId) {
       throw new Error("Token o accountId no válidos");

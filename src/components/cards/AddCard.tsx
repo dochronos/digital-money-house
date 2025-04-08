@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ImageCard from "./ImageCard";
 import InputRadius from "@/components/form/InputRadius";
 import SubmitButton from "@/components/form/SubmitButton";
+import { newCard, getAllCards } from "@/components/services/cards.service";
+import { CardType } from "@/types/card.types";
+import CardItem from "./CardItem";
 
 type AddCardProps = {
   accountId: number;
-  cardsList: any[]; // Podés tiparlo mejor si querés
 };
 
-const AddCard = ({ accountId, cardsList }: AddCardProps) => {
+const AddCard = ({ accountId }: AddCardProps) => {
   const [formData, setFormData] = useState({
     number: "",
     expiry: "",
@@ -18,18 +20,54 @@ const AddCard = ({ accountId, cardsList }: AddCardProps) => {
     name: "",
   });
 
+  const [cards, setCards] = useState<CardType[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [fetchingCards, setFetchingCards] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const token = "Bearer tu-token-aqui"; // 🔐 Reemplazar luego por auth real
+
+  const fetchCards = async () => {
+    try {
+      setFetchingCards(true);
+      const fetchedCards = await getAllCards(accountId, token);
+      setCards(fetchedCards);
+    } catch (err) {
+      console.error("Error cargando tarjetas:", err);
+    } finally {
+      setFetchingCards(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCards();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Enviando tarjeta:", formData);
-    // Acá va la lógica para agregar la tarjeta usando un service
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      await newCard(accountId, token, formData);
+      setSuccess("Tarjeta creada exitosamente.");
+      setFormData({ number: "", expiry: "", cvc: "", name: "" });
+      fetchCards(); // 🔁 Refrescar la lista
+    } catch (err: any) {
+      setError(err.message || "Error al crear la tarjeta.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section className="w-full justify-start items-start p-6 md:py-10 md:px-8 flex flex-col rounded-[10px] bg-white text-dark1 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] xl:p-12">
+    <section className="w-full p-6 md:py-10 md:px-8 flex flex-col rounded-[10px] bg-white text-dark1 shadow-md xl:p-12">
       <h2 className="text-xl font-bold mb-6">Agregar nueva tarjeta</h2>
 
       <div className="mb-6">
@@ -54,7 +92,7 @@ const AddCard = ({ accountId, cardsList }: AddCardProps) => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Ej: MELISA LUCIA FERRARIS"
+          placeholder="Ej: JUAN PEREZ"
         />
         <div className="flex flex-col md:flex-row gap-4">
           <InputRadius
@@ -73,13 +111,31 @@ const AddCard = ({ accountId, cardsList }: AddCardProps) => {
           />
         </div>
 
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {success && <p className="text-green-600 mt-2">{success}</p>}
+
         <div className="mt-6">
-          <SubmitButton text="Guardar tarjeta" />
+          <SubmitButton text={loading ? "Guardando..." : "Guardar tarjeta"} />
         </div>
       </form>
+
+      {/* 🔽 Lista de tarjetas */}
+      <div className="mt-10 w-full">
+        <h3 className="text-lg font-semibold mb-4">Tus tarjetas</h3>
+        {fetchingCards ? (
+          <p className="text-gray-500">Cargando tarjetas...</p>
+        ) : cards.length === 0 ? (
+          <p className="text-gray-500">No tenés tarjetas agregadas aún.</p>
+        ) : (
+          <ul className="flex flex-col gap-4">
+            {cards.map((card) => (
+              <CardItem key={card.id} card={card} />
+            ))}
+          </ul>
+        )}
+      </div>
     </section>
   );
 };
 
 export default AddCard;
-
