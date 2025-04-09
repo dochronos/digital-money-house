@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ArrowIcon from "@/components/common/Icons/ArrowIcon";
 import AliasAndCvu from "@/components/dashboard/profile/AliasAndCvu";
-import ProfileData from "@/components/dashboard/profile/ProfileData";
+import ProfileForm from "@/components/dashboard/profile/ProfileForm";
 import { getAccount } from "@/services/account.service";
 import { getUser } from "@/services/user.service";
 import { getTokenFromCookie } from "@/utils/getTokenFromCookie";
@@ -13,7 +13,7 @@ export default async function ProfilePage() {
 
   return (
     <>
-      <ProfileData userData={userData} token={token} />
+      <ProfileForm userData={userData} token={token} />
 
       <Link
         href="/dashboard/add-money"

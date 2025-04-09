@@ -12,6 +12,7 @@ type CardsListProps = {
   accountId: number;
   showAddMoneyPage: boolean;
   token: string;
+  onSelect?: (id: number) => void; // ✅ NUEVA PROP OPCIONAL
 };
 
 const UserCards = ({
@@ -19,6 +20,7 @@ const UserCards = ({
   accountId,
   showAddMoneyPage,
   token,
+  onSelect,
 }: CardsListProps) => {
   const [cards, setCards] = useState<CardType[]>(cardsList);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
@@ -26,6 +28,7 @@ const UserCards = ({
 
   const handleSelect = (cardId: number) => {
     setSelectedCardId(cardId);
+    onSelect?.(cardId); // ✅ LLAMADA AL CALLBACK SI EXISTE
   };
 
   const handleDelete = async (cardId: number) => {
@@ -73,3 +76,4 @@ const UserCards = ({
 };
 
 export default UserCards;
+
