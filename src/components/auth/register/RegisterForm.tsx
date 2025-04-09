@@ -17,7 +17,7 @@ const RegisterForm = () => {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
 
-  const methods = useForm({
+  const methods = useForm<RegisterFormType>({
     resolver: yupResolver(RegisterScheme),
   });
 
@@ -30,6 +30,7 @@ const RegisterForm = () => {
   const onSubmitRegister = async (data: RegisterFormType) => {
     try {
       setServerError(null);
+
       const requestBody: RegisterBodyType = {
         ...data,
         dni: Number(data.dni),
@@ -43,11 +44,11 @@ const RegisterForm = () => {
         router.push("/register/success");
       }
     } catch (error) {
-      if (error instanceof Error) {
-        setServerError(error.message);
-      } else {
-        setServerError("Error desconocido en el registro");
-      }
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Error desconocido en el registro";
+      setServerError(message);
     }
   };
 
@@ -63,33 +64,33 @@ const RegisterForm = () => {
             fieldName="firstname"
             errorText={errors.firstname?.message}
             placeholder="Nombre*"
-            inputClassName="text-black/50 font-normal shadow-[0px_4px_4px_0px_rgba(0,0,0,0.10)] border border-select1"
+            inputClassName="text-black/50 font-normal shadow-[0_4px_4px_rgba(0,0,0,0.1)] border border-select1"
           />
           <InputText
             type="text"
             fieldName="lastname"
             errorText={errors.lastname?.message}
             placeholder="Apellido*"
-            inputClassName="text-black/50 font-normal shadow-[0px_4px_4px_0px_rgba(0,0,0,0.10)] border border-select1"
+            inputClassName="text-black/50 font-normal shadow-[0_4px_4px_rgba(0,0,0,0.1)] border border-select1"
           />
           <InputText
             type="text"
             fieldName="dni"
             errorText={errors.dni?.message}
             placeholder="DNI*"
-            inputClassName="text-black/50 font-normal shadow-[0px_4px_4px_0px_rgba(0,0,0,0.10)] border border-select1"
+            inputClassName="text-black/50 font-normal shadow-[0_4px_4px_rgba(0,0,0,0.1)] border border-select1"
           />
           <InputText
             type="text"
             fieldName="email"
             errorText={errors.email?.message}
             placeholder="Correo electrónico*"
-            inputClassName="text-black/50 font-normal shadow-[0px_4px_4px_0px_rgba(0,0,0,0.10)] border border-select1"
+            inputClassName="text-black/50 font-normal shadow-[0_4px_4px_rgba(0,0,0,0.1)] border border-select1"
           />
         </div>
 
         <div className="text-start mb-3 mt-5">
-          <p className="text-xs md:tracking-tight text-gray1 md:text-sm xl:text-[14.6px]">
+          <p className="text-xs md:text-sm xl:text-[14.6px] text-gray1">
             Usa entre 6 y 20 caracteres (debe contener al menos un carácter
             especial, una mayúscula y un número).
           </p>
@@ -101,21 +102,21 @@ const RegisterForm = () => {
             fieldName="password"
             errorText={errors.password?.message}
             placeholder="Contraseña*"
-            inputClassName="text-black/50 font-normal shadow-[0px_4px_4px_0px_rgba(0,0,0,0.10)] border border-select1"
+            inputClassName="text-black/50 font-normal shadow-[0_4px_4px_rgba(0,0,0,0.1)] border border-select1"
           />
           <InputText
             type="password"
             fieldName="confirmPassword"
             errorText={errors.confirmPassword?.message}
             placeholder="Confirmar contraseña*"
-            inputClassName="text-black/50 font-normal shadow-[0px_4px_4px_0px_rgba(0,0,0,0.10)] border border-select1"
+            inputClassName="text-black/50 font-normal shadow-[0_4px_4px_rgba(0,0,0,0.1)] border border-select1"
           />
           <InputText
             type="text"
             fieldName="phone"
             errorText={errors.phone?.message}
             placeholder="Teléfono*"
-            inputClassName="text-black/50 font-normal shadow-[0px_4px_4px_0px_rgba(0,0,0,0.10)] border border-select1"
+            inputClassName="text-black/50 font-normal shadow-[0_4px_4px_rgba(0,0,0,0.1)] border border-select1"
           />
           <SubmitButton
             className="w-full mt-2 md:mt-0 bg-green focus:outline-2 focus:outline-black"
