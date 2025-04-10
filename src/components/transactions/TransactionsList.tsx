@@ -1,11 +1,12 @@
 "use client";
 
-import TransactionItem from "./transactionItem";
+import TransactionItem from "./TransactionItem";
 import Pagination from "./Pagination";
 import FilterButton from "./FilterButton";
 import SearchInput from "../common/SearchInput";
-import { TransactionType } from "@/types/transaction.types";
+
 import useTransactions from "@/hooks/useTransactions";
+import { TransactionType } from "@/types/transaction.types";
 
 type TransactionsListProps = {
   transactionsList: TransactionType[];
@@ -40,8 +41,9 @@ export default function TransactionsList({
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <section className="flex flex-col gap-6">
+      {/* Búsqueda y filtros */}
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <SearchInput
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -54,26 +56,30 @@ export default function TransactionsList({
         />
       </div>
 
+      {/* Lista de transacciones */}
       <ul className="flex flex-col gap-4">
-        {paginatedTransactions.map((transaction) => (
-          <TransactionItem key={transaction.id} transaction={transaction} />
+        {paginatedTransactions.map((tx) => (
+          <TransactionItem key={tx.id} transaction={tx} />
         ))}
       </ul>
 
+      {/* Paginación */}
       {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={changePage}
+          changePage={changePage}
         />
       )}
 
-      {!paginatedTransactions.length && (
+      {/* Sin resultados */}
+      {paginatedTransactions.length === 0 && (
         <p className="text-center text-gray-500 mt-6">
           No se encontraron transacciones.
         </p>
       )}
 
+      {/* Botón "Ver más" */}
       {!showActivityPage && (
         <div className="text-center mt-4">
           <a
@@ -84,6 +90,6 @@ export default function TransactionsList({
           </a>
         </div>
       )}
-    </div>
+    </section>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+
 import SearchIcon from "@/components/common/Icons/SearchIcon";
 
 type SearchBarProps = {
@@ -9,15 +10,16 @@ type SearchBarProps = {
 
 const SearchBar = ({ value, onChange, onKeyDown }: SearchBarProps) => {
   return (
-    <div className="w-full flex items-center gap-5 p-5 md:px-8 md:gap-8 xl:px-12 bg-white border border-select1 rounded-[10px] shadow-md">
-      <SearchIcon />
+    <div className="w-full flex items-center gap-4 p-4 md:p-5 bg-white border border-gray-300 rounded-xl shadow-sm">
+      <SearchIcon className="w-5 h-5 text-gray-400" />
       <input
-        className="text-black/50 text-base w-full outline-none md:text-[18px]"
         type="text"
         placeholder="Buscar en tu actividad"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}
+        className="w-full text-sm md:text-base text-dark1 placeholder:text-gray-400 bg-transparent outline-none"
+        aria-label="Buscar transacción"
       />
     </div>
   );
