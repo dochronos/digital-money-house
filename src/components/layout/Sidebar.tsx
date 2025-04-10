@@ -1,21 +1,22 @@
 "use client";
+
 import Cookies from "js-cookie";
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname, useRouter } from "next/navigation";
 
+const MENU_ITEMS = [
+  { name: "Inicio", path: "/dashboard" },
+  { name: "Actividad", path: "/dashboard/activity" },
+  { name: "Tu perfil", path: "/dashboard/profile" },
+  { name: "Cargar dinero", path: "/dashboard/add-money" },
+  { name: "Pagar servicios", path: "/dashboard/pay-services" },
+  { name: "Tarjetas", path: "/dashboard/cards" },
+];
+
 const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-
-  const menuItems = [
-    { name: "Inicio", path: "/dashboard" },
-    { name: "Actividad", path: "/dashboard/activity" },
-    { name: "Tu perfil", path: "/dashboard/profile" },
-    { name: "Cargar dinero", path: "/dashboard/add-money" },
-    { name: "Pagar servicios", path: "/dashboard/pay-services" },
-    { name: "Tarjetas", path: "/dashboard/cards" },
-  ];
 
   const logoutHandle = () => {
     localStorage.removeItem("authToken");
@@ -26,9 +27,9 @@ const Sidebar = () => {
   return (
     <nav className="w-full md:w-64 p-6 bg-green text-dark1 flex flex-col gap-4 min-h-screen">
       <div className="flex flex-col gap-3">
-        {menuItems.map((item, index) => (
+        {MENU_ITEMS.map((item) => (
           <Link
-            key={`${item.name}-${index}`}
+            key={item.path}
             href={item.path}
             className={clsx(
               "text-lg transition-colors duration-150 hover:text-black",
@@ -47,6 +48,7 @@ const Sidebar = () => {
         <button
           onClick={logoutHandle}
           className="text-lg font-medium text-dark1/60 hover:text-black transition-colors duration-150"
+          aria-label="Cerrar sesión"
         >
           Cerrar sesión
         </button>
@@ -56,3 +58,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
