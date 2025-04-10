@@ -1,17 +1,20 @@
-import { z } from "zod";
+import * as yup from "yup";
 
-export const cardFormSchema = z.object({
-  cardNumber: z
+export const cardFormSchema = yup.object({
+  cardNumber: yup
     .string()
-    .min(16, "El número debe tener al menos 16 dígitos")
-    .regex(/^\d+$/, "Solo se permiten números"),
-  cardHolder: z.string().min(3, "El nombre es obligatorio"),
-  expiryDate: z
+    .required("El número es obligatorio")
+    .matches(/^\d{16}$/, "El número debe tener exactamente 16 dígitos"),
+  cardHolder: yup
     .string()
-    .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Formato inválido. Usa MM/AA"),
-  cvv: z
+    .required("El nombre es obligatorio")
+    .min(3, "El nombre debe tener al menos 3 caracteres"),
+  expiryDate: yup
     .string()
-    .regex(/^\d{3,4}$/, "El CVV debe tener 3 o 4 dígitos"),
+    .required("La fecha es obligatoria")
+    .matches(/^(0[1-9]|1[0-2])\/\d{2}$/, "Formato inválido. Usa MM/AA"),
+  cvv: yup
+    .string()
+    .required("El CVV es obligatorio")
+    .matches(/^\d{3,4}$/, "El CVV debe tener 3 o 4 dígitos"),
 });
-
-export type CardFormSchema = z.infer<typeof cardFormSchema>;
