@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import ImageCard from "./ImageCard";
 import InputRadius from "@/components/form/InputRadius";
 import SubmitButton from "@/components/form/SubmitButton";
-import { newCard, getAllCards } from "@/components/services/cards.service";
+import { newCard, getAllCards } from "@/services/cards.service";
 import { CardType } from "@/types/card.types";
 import CardItem from "./CardItem";
+import { getTokenFromCookie } from "@/utils/getTokenFromCookie";
 
 type AddCardProps = {
   accountId: number;
@@ -23,18 +24,17 @@ const AddCard = ({ accountId }: AddCardProps) => {
   const [cards, setCards] = useState<CardType[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetchingCards, setFetchingCards] = useState(true);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const token = "Bearer tu-token-aqui"; // 🔐 Reemplazar luego por auth real
+  const token = getTokenFromCookie();
 
   const fetchCards = async () => {
     try {
       setFetchingCards(true);
-      const fetchedCards = await getAllCards(accountId, token);
-      setCards(fetchedCards);
+      const fetched = await getAllCards(accountId, token);
+      setCards(fetched);
     } catch (err) {
-      console.error("Error cargando tarjetas:", err);
+      console.error("Error al obtener tarjetas:", err);
     } finally {
       setFetchingCards(false);
     }
@@ -50,17 +50,16 @@ const AddCard = ({ accountId }: AddCardProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setMessage(null);
     setLoading(true);
 
     try {
       await newCard(accountId, token, formData);
-      setSuccess("Tarjeta creada exitosamente.");
+      setMessage({ type: "success", text: "Tarjeta creada exitosamente." });
       setFormData({ number: "", expiry: "", cvc: "", name: "" });
-      fetchCards(); // 🔁 Refrescar la lista
+      fetchCards();
     } catch (err: any) {
-      setError(err.message || "Error al crear la tarjeta.");
+      setMessage({ type: "error", text: err.message || "Error al crear la tarjeta." });
     } finally {
       setLoading(false);
     }
@@ -70,16 +69,9 @@ const AddCard = ({ accountId }: AddCardProps) => {
     <section className="w-full p-6 md:py-10 md:px-8 flex flex-col rounded-[10px] bg-white text-dark1 shadow-md xl:p-12">
       <h2 className="text-xl font-bold mb-6">Agregar nueva tarjeta</h2>
 
-      <div className="mb-6">
-        <ImageCard
-          number={formData.number}
-          name={formData.name}
-          expiry={formData.expiry}
-          cvc={formData.cvc}
-        />
-      </div>
+      <ImageCard {...formData} />
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mt-6">
         <InputRadius
           label="Número de tarjeta"
           name="number"
@@ -111,15 +103,17 @@ const AddCard = ({ accountId }: AddCardProps) => {
           />
         </div>
 
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-        {success && <p className="text-green-600 mt-2">{success}</p>}
+        {message && (
+          <p className={`text-sm ${message.type === "error" ? "text-red-500" : "text-green-600"}`}>
+            {message.text}
+          </p>
+        )}
 
         <div className="mt-6">
           <SubmitButton text={loading ? "Guardando..." : "Guardar tarjeta"} />
         </div>
       </form>
 
-      {/* 🔽 Lista de tarjetas */}
       <div className="mt-10 w-full">
         <h3 className="text-lg font-semibold mb-4">Tus tarjetas</h3>
         {fetchingCards ? (
