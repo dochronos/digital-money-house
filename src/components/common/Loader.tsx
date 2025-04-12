@@ -2,11 +2,15 @@
 
 import { motion } from "framer-motion";
 
+type LoaderProps = {
+  className?: string;
+};
+
 const circleStyle = "w-3 h-3 bg-green rounded-full";
 
-export default function Loader() {
+export default function Loader({ className = "h-32" }: LoaderProps) {
   return (
-    <div className="flex justify-center items-center h-32">
+    <div className={`flex justify-center items-center ${className}`}>
       <div className="flex gap-2">
         {[0, 1, 2].map((i) => (
           <motion.div

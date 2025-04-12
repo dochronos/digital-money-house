@@ -69,4 +69,3 @@ const UserCards = ({
 };
 
 export default UserCards;
-

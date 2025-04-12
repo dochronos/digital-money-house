@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import ImageCard from "./ImageCard";
 import InputRadius from "@/components/form/InputRadius";
@@ -42,7 +40,7 @@ const AddCard = ({ accountId }: AddCardProps) => {
 
   useEffect(() => {
     fetchCards();
-  }, []);
+  }, [accountId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,6 +50,12 @@ const AddCard = ({ accountId }: AddCardProps) => {
     e.preventDefault();
     setMessage(null);
     setLoading(true);
+
+    if (!formData.number || !formData.expiry || !formData.cvc || !formData.name) {
+      setMessage({ type: "error", text: "Todos los campos son requeridos." });
+      setLoading(false);
+      return;
+    }
 
     try {
       await newCard(accountId, token, formData);
