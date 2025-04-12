@@ -12,7 +12,6 @@ import { useToken } from "@/context/tokenContext";
 import { PasswordType } from "@/types/auth.types";
 import { login } from "@/services/auth.service";
 import Cookies from "js-cookie";
-import Link from "next/link";
 
 export const FormPassword = () => {
   const { email } = useEmail();
@@ -31,13 +30,16 @@ export const FormPassword = () => {
 
   const onSubmit = async (data: PasswordType) => {
     setServerError(null);
-    const body = { email, password: data.password };
+    const normalizedEmail = email.trim().toLowerCase();
 
     try {
-      const loginResponse = await login(body);
+      const loginResponse = await login({
+        email: normalizedEmail,
+        password: data.password,
+      });
 
       if (loginResponse?.error) {
-        setServerError("Credenciales incorrectas. Intente nuevamente");
+        setServerError("Credenciales incorrectas. Intente nuevamente.");
         return;
       }
 
@@ -48,7 +50,8 @@ export const FormPassword = () => {
         router.push("/dashboard");
       }
     } catch (error) {
-      setServerError("Ha ocurrido un error. Intenta iniciar nuevamente.");
+      console.error("Login error:", error);
+      setServerError("Ha ocurrido un error. Intenta iniciar sesión nuevamente.");
     }
   };
 
@@ -58,15 +61,6 @@ export const FormPassword = () => {
         className="w-full flex flex-col gap-5"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* Email hidden field */}
-        <InputText
-          type="email"
-          fieldName="email"
-          defaultValue={email}
-          style={{ display: "none" }}
-        />
-
-        {/* Password input */}
         <InputText
           type="password"
           placeholder="Contraseña"
@@ -80,11 +74,9 @@ export const FormPassword = () => {
         />
 
         {serverError && (
-          <Link href="/(auth)/login">
-            <p className="text-sm italic text-error1 text-center pt-2">
-              {serverError}
-            </p>
-          </Link>
+          <p className="text-sm italic text-error1 text-center pt-2">
+            {serverError}
+          </p>
         )}
       </form>
     </FormProvider>

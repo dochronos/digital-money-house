@@ -5,3 +5,25 @@
 body {
   font-family: 'Open Sans', sans-serif;
 }
+
+/* Utilidades personalizadas */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Agregar la clase 'border-select1' personalizada */
+  .border-select1 {
+    border-color: #e4e4e7; /* Ajusta según sea necesario */
+  }
+
+  /* Fondo verde personalizado */
+  .bg-green {
+    background-color: #22c55e; /* Ajusta según sea necesario */
+  }
+
+  /* Sombra personalizada */
+  .shadow-custom {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  }
+}

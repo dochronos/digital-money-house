@@ -2,24 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Utilidades personalizadas */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+body {
+  font-family: 'Open Sans', sans-serif;
 }
 
-/* Variables o estilos base adicionales que podrías querer centralizar */
-:root {
-  /* Colores personalizados, si tenés definidos */
-  /* --color-primary: #22c55e; */
-}
-
-/* Puedes agregar estilos globales personalizados aquí si es necesario */
+/* Estilo global para el scroll */
 html {
   scroll-behavior: smooth;
-}
-
-body {
-  @apply bg-dark1 text-white;
 }

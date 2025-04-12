@@ -1,20 +1,27 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import { EmailScheme } from "@/schemes/loginScheme";
-import InputText from "@/components/ui/form/InputText";
-import SubmitButton from "@/components/ui/form/SubmitButton";
+import InputText from "@/components/form/InputText";
+import SubmitButton from "@/components/form/SubmitButton";
 import { useRouter } from "next/navigation";
 import { useEmail } from "@/context/emailContext";
 import { EMailType } from "@/types/auth.types";
 import Cookies from "js-cookie";
 
 export const FormEmail = () => {
-  const isRegisterSuccess = Cookies.get("isRegisterSuccess");
   const router = useRouter();
   const { setEmail } = useEmail();
+
+  const [isRegisterSuccess, setIsRegisterSuccess] = useState(false);
+
+  useEffect(() => {
+    const flag = Cookies.get("isRegisterSuccess");
+    setIsRegisterSuccess(Boolean(flag));
+  }, []);
 
   const methods = useForm<EMailType>({
     resolver: yupResolver(EmailScheme),
@@ -26,17 +33,15 @@ export const FormEmail = () => {
   } = methods;
 
   const onSubmitEmail = (data: EMailType) => {
-    setEmail(data.email);
-    localStorage.setItem("email", data.email);
+    const normalizedEmail = data.email.trim().toLowerCase(); // Normalización del correo
+    setEmail(normalizedEmail);
+    localStorage.setItem("email", normalizedEmail);
     router.push("/(auth)/login/password");
   };
 
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={handleSubmit(onSubmitEmail)}
-        className="w-full flex flex-col gap-5"
-      >
+      <form onSubmit={handleSubmit(onSubmitEmail)} className="w-full flex flex-col gap-5">
         <InputText
           type="email"
           placeholder="Correo electrónico"
