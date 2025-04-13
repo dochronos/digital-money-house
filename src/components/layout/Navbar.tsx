@@ -29,7 +29,7 @@ export default function Navbar({
   logoClassName,
   logoLink,
   navbarClassName,
-  buttonsLinks,
+  buttonsLinks = [],
   isLogged,
   userName,
 }: NavbarProps) {
@@ -50,22 +50,23 @@ export default function Navbar({
         </div>
 
         <div className="flex items-center gap-4">
-          {buttonsLinks?.map((link, index) => (
-            <Link
-              key={`${link.text}-${index}`}
-              href={link.href}
-              className={clsx(
-                "border-2 px-3 py-1 md:px-5 md:py-2 rounded-[5px] font-bold text-sm",
-                {
-                  "bg-green text-black border-none": !link.outline,
-                  "border-green text-green": link.outline,
-                  "bg-secondary text-white": link.solid,
-                }
-              )}
-            >
-              {link.text}
-            </Link>
-          ))}
+          {buttonsLinks.length > 0 &&
+            buttonsLinks.map((link, index) => (
+              <Link
+                key={`${link.text}-${index}`}
+                href={link.href}
+                className={clsx(
+                  "border-2 px-3 py-1 md:px-5 md:py-2 rounded-[5px] font-bold text-sm",
+                  {
+                    "bg-green text-black border-none": !link.outline,
+                    "border-green text-green": link.outline,
+                    "bg-secondary text-white": link.solid,
+                  }
+                )}
+              >
+                {link.text}
+              </Link>
+            ))}
 
           {isLogged && userName && (
             <div className="flex items-center gap-3">
@@ -80,7 +81,11 @@ export default function Navbar({
               <Link href="/dashboard" className="hidden md:block">
                 <p className="text-white text-base font-bold">Hola, {userName}</p>
               </Link>
-              <button className="block md:hidden" onClick={toggleMobileMenu}>
+              <button
+                aria-label="Abrir menú móvil"
+                className="block md:hidden"
+                onClick={toggleMobileMenu}
+              >
                 <HamburguesaIcon />
               </button>
             </div>
@@ -98,7 +103,7 @@ export default function Navbar({
 
           <aside className="md:hidden fixed top-0 right-0 h-full w-[55%] bg-dark2 z-40 p-6 flex flex-col gap-6">
             <div className="flex justify-end">
-              <button onClick={toggleMobileMenu}>
+              <button aria-label="Cerrar menú móvil" onClick={toggleMobileMenu}>
                 <CloseIcon />
               </button>
             </div>
