@@ -4,13 +4,14 @@ import React, { useEffect, useState } from "react";
 import UserCards from "@/components/cards/UserCards";
 import { getAllCards } from "@/components/services/cards.service";
 import { CardType } from "@/types/card.types";
+import Loader from "@/components/common/Loader";
 
 const CardsListPage = () => {
   const [cards, setCards] = useState<CardType[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const accountId = 1; // 🧪 ID temporal para testing
-  const token = "Bearer tu-token-aqui"; // 🔐 Reemplazar luego con auth real
+  const accountId = 1; // 🧪 Reemplazar con lógica real
+  const token = "Bearer tu-token-aqui"; // 🔐 Reemplazar con lógica real
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -28,7 +29,11 @@ const CardsListPage = () => {
   }, []);
 
   if (loading) {
-    return <p className="p-6">Cargando tarjetas...</p>;
+    return (
+      <div className="flex justify-center items-center h-48">
+        <Loader />
+      </div>
+    );
   }
 
   return (
