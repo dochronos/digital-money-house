@@ -5,7 +5,6 @@ import { getAccount } from "@/services/account.service";
 import { getAllCards } from "@/services/cards.service";
 import { getTokenFromCookie } from "@/utils/getTokenFromCookie";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { useState } from "react";
 
 const AddMoneyCardPage = async () => {
@@ -24,7 +23,7 @@ const AddMoneyCardPage = async () => {
 
 export default AddMoneyCardPage;
 
-// Componente cliente separado
+// CLIENT SIDE COMPONENT
 "use client";
 
 type Props = {
@@ -43,6 +42,7 @@ const AddMoneyCardClient = ({ accountId, cardsList, token }: Props) => {
       return;
     }
 
+    // Reemplazar esto con lógica real más adelante
     alert(`Transferir $${amount} desde tarjeta ${selectedCardId}`);
   };
 
@@ -56,7 +56,7 @@ const AddMoneyCardClient = ({ accountId, cardsList, token }: Props) => {
         <UserCards
           accountId={accountId}
           cardsList={cardsList}
-          showAddMoneyPage={true}
+          showAddMoneyPage
           token={token}
           onSelect={(id) => setSelectedCardId(id)}
         />
@@ -87,6 +87,7 @@ const AddMoneyCardClient = ({ accountId, cardsList, token }: Props) => {
         </div>
       </div>
 
+      {/* Botón móvil */}
       <div className="md:hidden flex justify-end w-full">
         <button
           className="w-1/2 p-4 bg-green text-dark1 font-bold rounded-lg shadow-md"

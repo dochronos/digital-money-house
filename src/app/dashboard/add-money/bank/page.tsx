@@ -8,8 +8,15 @@ export default async function AddMoneyBankPage() {
 
   return (
     <section className="p-5 md:p-8 xl:p-12">
-      <h1 className="text-2xl font-bold mb-6">Transferencia bancaria</h1>
+      <header className="mb-6">
+        <h1 className="text-2xl font-bold">Transferencia bancaria</h1>
+        <p className="text-gray-500 mt-1 text-sm">
+          Usá tu alias o CVU para recibir transferencias en tu cuenta.
+        </p>
+      </header>
+
       <AliasAndCvu accountData={accountData} />
     </section>
   );
 }
+

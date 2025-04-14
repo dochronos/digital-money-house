@@ -10,7 +10,8 @@ export default async function NewCardPage() {
   const cardsList = await getAllCards(accountId, token);
 
   return (
-    <section className="p-4 md:p-6 lg:p-8">
+    <section className="p-5 md:p-8 xl:p-12 flex flex-col gap-6">
+      <h1 className="text-2xl font-bold">Agregar nueva tarjeta</h1>
       <AddCard accountId={accountId} cardsList={cardsList} />
     </section>
   );
