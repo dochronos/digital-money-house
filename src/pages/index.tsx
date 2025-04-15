@@ -1,4 +1,4 @@
-import { CardForm } from "@/components/forms/CardForm";
+import { CardForm } from "@/components/form/CardForm";
 
 export default function Home() {
   return (

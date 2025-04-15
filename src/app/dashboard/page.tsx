@@ -1,6 +1,6 @@
 import Actions from "@/components/dashboard/home/Actions";
 import Balance from "@/components/dashboard/home/Balance";
-import TransactionsList from "@/components/dashboard/home/TransactionsList";
+import TransactionsList from "@/components/transactions/TransactionsList";
 import { getAccount } from "@/services/account.service";
 import { getAllTransactions } from "@/services/transactions.service";
 import { getTokenFromCookie } from "@/utils/getTokenFromCookie";

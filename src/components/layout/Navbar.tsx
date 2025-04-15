@@ -6,7 +6,7 @@ import { clsx } from "clsx";
 
 import LogoSimbolo from "@/components/common/Logos/LogoSimbolo";
 import HamburguesaIcon from "@/components/common/Icons/HamburguesaIcon";
-import { CloseIcon } from "@/components/common/Icons/CloseIcon";
+import CloseIcon from "@/components/common/Icons/CloseIcon";
 import Sidebar from "@/components/layout/Sidebar";
 
 type LinkType = {

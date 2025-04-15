@@ -46,7 +46,7 @@ export default function TransactionsList({
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <SearchInput
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
           onKeyDown={handleSearch}
         />
         <FilterButton
