@@ -2,12 +2,12 @@
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CardFormSchema, cardFormSchema } from "@/lib/validators/cardSchema";
+import { CardFormSchema, cardFormSchema } from "@/lib/validators/cardsSchema";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormError } from "@/components/ui/FormError";
-import { useCardStore } from "@/store/cardStore";
+import { useCardStore } from "@/store/cardstore";
 import { toast } from "sonner";
 
 export const CardForm = () => {
