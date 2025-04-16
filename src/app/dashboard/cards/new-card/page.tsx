@@ -1,4 +1,4 @@
-import AddCard from "@/components/dashboard/cards/AddCard";
+import AddCard from "@/components/cards/AddCard";
 import { getAccount } from "@/services/account.service";
 import { getAllCards } from "@/services/cards.service";
 import { getTokenFromCookie } from "@/utils/getTokenFromCookie";

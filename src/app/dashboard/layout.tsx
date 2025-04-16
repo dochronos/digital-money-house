@@ -1,5 +1,5 @@
-import Breadcrumb from "@/components/dashboard/layout/Breadcrumb";
-import Sidebar from "@/components/dashboard/layout/Sidebar";
+import Breadcrumb from "@/components/layout/Breadcrumb";
+import Sidebar from "@/components/layout/Sidebar";
 import Navbar from "@/components/layout/Navbar";
 import { getAccount } from "@/services/account.service";
 import { getUser } from "@/services/user.service";

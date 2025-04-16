@@ -1,6 +1,6 @@
 import ArrowIcon from "@/components/common/Icons/ArrowIcon";
 import PlusIcon from "@/components/common/Icons/PlusIcon";
-import UserCards from "@/components/dashboard/cards/UserCards";
+import UserCards from "@/components/cards/UserCards";
 import { getAccount } from "@/services/account.service";
 import { getAllCards } from "@/services/cards.service";
 import { getTokenFromCookie } from "@/utils/getTokenFromCookie";

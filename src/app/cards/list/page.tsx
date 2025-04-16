@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import UserCards from "@/components/cards/UserCards";
-import { getAllCards } from "@/components/services/cards.service";
+import { getAllCards } from "@/services/cards.service";
 import { CardType } from "@/types/card.types";
 import Loader from "@/components/common/Loader";
 

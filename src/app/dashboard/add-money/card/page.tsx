@@ -1,5 +1,5 @@
 import PlusIcon from "@/components/common/Icons/PlusIcon";
-import UserCards from "@/components/dashboard/cards/UserCards";
+import UserCards from "@/components/cards/UserCards";
 import InputRadius from "@/components/form/InputRadius";
 import { getAccount } from "@/services/account.service";
 import { getAllCards } from "@/services/cards.service";

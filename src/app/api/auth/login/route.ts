@@ -1,6 +1,6 @@
-import { AccessDeniedError } from '@/services/common/http.errors';
-import authService from '@/services/login.service';
-import LoginScheme from "@/schemes/login.scheme";
+import { AccessDeniedError } from '@/services/common/httpError';
+import authService from '@/services/loginservice';
+import LoginScheme from "@/schemes/loginScheme";
 import { cookies } from 'next/headers'
 
 export async function POST(request: Request) {

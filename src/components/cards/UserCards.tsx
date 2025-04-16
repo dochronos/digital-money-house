@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { deleteCardId } from "@/components/services/cards.service";
+import { deleteCardId } from "@/services/cards.service";
 import { CardType } from "@/types/card.types";
 import CardItem from "./CardItem";
 
