@@ -4,7 +4,6 @@ import TransactionItem from "./TransactionItem";
 import Pagination from "./Pagination";
 import FilterButton from "./FilterButton";
 import SearchInput from "../common/SearchInput";
-
 import useTransactions from "@/hooks/useTransactions";
 import { TransactionType } from "@/types/transaction.types";
 

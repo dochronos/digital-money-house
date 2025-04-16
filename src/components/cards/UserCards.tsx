@@ -56,9 +56,9 @@ const UserCards = ({
             <CardItem
               key={card.id}
               card={card}
-              selected={selectedCardId === card.number_id}
+              selected={selectedCardId === card.numberId}
               showRadio={showAddMoneyPage}
-              onSelect={() => handleSelect(card.number_id)}
+              onSelect={() => handleSelect(card.numberId)}
               onDelete={() => handleDelete(card.id)}
             />
           ))}

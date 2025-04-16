@@ -1,5 +1,5 @@
 import { AccessDeniedError } from '@/services/common/httpError';
-import authService from '@/services/loginservice';
+import authService from '@/services/loginService';
 import LoginScheme from "@/schemes/loginScheme";
 import { cookies } from 'next/headers'
 
@@ -8,8 +8,11 @@ export async function POST(request: Request) {
 
   try {
     const loginResponse = await authService.authenticate(email, password);
-
-    cookies().set('SocialSessionID', loginResponse.sessionId, {
+    
+    // Añadido await y guardado en variable
+    const cookiesStore = await cookies();
+    
+    cookiesStore.set('SocialSessionID', loginResponse.sessionId, {
       expires: loginResponse.expireAt,
       httpOnly: true,
       secure: true,
@@ -17,7 +20,7 @@ export async function POST(request: Request) {
       path: '/',
     });
 
-    cookies().set('SocialUsername', loginResponse.user.username, {
+    cookiesStore.set('SocialUsername', loginResponse.user.username, {
       expires: loginResponse.expireAt,
       httpOnly: false,
       secure: true,

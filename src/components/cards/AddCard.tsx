@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import ImageCard from "./ImageCard";
 import InputRadius from "@/components/form/InputRadius";
@@ -22,11 +24,26 @@ const AddCard = ({ accountId }: AddCardProps) => {
   const [cards, setCards] = useState<CardType[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetchingCards, setFetchingCards] = useState(true);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
-  const token = getTokenFromCookie();
+  const [token, setToken] = useState("");
+
+  // Obtener token en cliente
+  useEffect(() => {
+    const fetchToken = async () => {
+      const t = await getTokenFromCookie(); // Usar await correctamente dentro de una función async
+      setToken(t);
+    };
+
+    fetchToken(); // Llamar a la función async
+  }, []);
 
   const fetchCards = async () => {
+    if (!token) return;
+
     try {
       setFetchingCards(true);
       const fetched = await getAllCards(accountId, token);
@@ -39,8 +56,8 @@ const AddCard = ({ accountId }: AddCardProps) => {
   };
 
   useEffect(() => {
-    fetchCards();
-  }, [accountId]);
+    if (token) fetchCards();
+  }, [accountId, token]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -51,7 +68,9 @@ const AddCard = ({ accountId }: AddCardProps) => {
     setMessage(null);
     setLoading(true);
 
-    if (!formData.number || !formData.expiry || !formData.cvc || !formData.name) {
+    const { number, expiry, cvc, name } = formData;
+
+    if (!number || !expiry || !cvc || !name) {
       setMessage({ type: "error", text: "Todos los campos son requeridos." });
       setLoading(false);
       return;
@@ -63,7 +82,10 @@ const AddCard = ({ accountId }: AddCardProps) => {
       setFormData({ number: "", expiry: "", cvc: "", name: "" });
       fetchCards();
     } catch (err: any) {
-      setMessage({ type: "error", text: err.message || "Error al crear la tarjeta." });
+      setMessage({
+        type: "error",
+        text: err.message || "Error al crear la tarjeta.",
+      });
     } finally {
       setLoading(false);
     }
@@ -75,7 +97,10 @@ const AddCard = ({ accountId }: AddCardProps) => {
 
       <ImageCard {...formData} />
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mt-6">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4 w-full mt-6"
+      >
         <InputRadius
           label="Número de tarjeta"
           name="number"
@@ -108,7 +133,11 @@ const AddCard = ({ accountId }: AddCardProps) => {
         </div>
 
         {message && (
-          <p className={`text-sm ${message.type === "error" ? "text-red-500" : "text-green-600"}`}>
+          <p
+            className={`text-sm ${
+              message.type === "error" ? "text-red-500" : "text-green-600"
+            }`}
+          >
             {message.text}
           </p>
         )}

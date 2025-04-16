@@ -31,9 +31,9 @@ const RegisterForm = () => {
     try {
       setServerError(null);
 
-      const requestBody: RegisterBodyType = {
+      const requestBody: RegisterFormType = {
         ...data,
-        dni: Number(data.dni),
+        dni: data.dni,
       };
 
       const response = await newUser(requestBody);

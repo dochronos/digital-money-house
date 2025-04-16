@@ -1,7 +1,11 @@
 export type TransactionType = {
   id: string;
-  description: string;
-  amount: number;
-  dated: string; // formato ISO: "2025-04-01"
   type: "transfer" | "payment";
+  amount: number;
+  concept: string;
+  description: string;
+  date: string;
+  dated: string;
+  destinationAccount?: string;
+  sourceAccount?: string;
 };

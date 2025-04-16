@@ -26,3 +26,19 @@ export const PasswordScheme = yup.object({
     .required("Por favor, complete su contraseña.")
     .matches(passwordRegex, "Contraseña inválida."),
 });
+
+/**
+ * Esquema combinado para validar login
+ */
+const LoginScheme = yup.object({
+  email: yup
+    .string()
+    .required("Por favor, complete su email.")
+    .matches(emailRegex, "Correo inválido."),
+  password: yup
+    .string()
+    .required("Por favor, complete su contraseña.")
+    .matches(passwordRegex, "Contraseña inválida."),
+});
+
+export default LoginScheme;
