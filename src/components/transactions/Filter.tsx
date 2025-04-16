@@ -1,8 +1,6 @@
-"use client";
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import FilterButton from "./FilterButton";
+import { Button } from "@/components/ui/Button";
 
 type FilterProps = {
   onFilterApply: (filters: Record<string, string>) => void;
@@ -21,7 +19,9 @@ const Filter = ({ onFilterApply }: FilterProps) => {
 
   return (
     <div className="relative">
-      <FilterButton onClick={toggleOpen} />
+      <Button onClick={toggleOpen} variant="outline" size="sm">
+        Filtros
+      </Button>
 
       <AnimatePresence>
         {isOpen && (

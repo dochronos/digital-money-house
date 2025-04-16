@@ -24,18 +24,17 @@ export default function FilterButton({
       <div className="flex flex-wrap gap-2">
         {availableFilters.map((filter) => {
           const isActive = activeFilters.includes(filter);
-          const baseClasses = "rounded-full text-sm px-3 py-1 transition";
 
           return (
             <Button
               key={filter}
               size="sm"
               variant={isActive ? "secondary" : "ghost"}
-              className={`${baseClasses} ${
+              className={
                 isActive
                   ? "bg-white text-green font-semibold"
                   : "bg-transparent text-white hover:bg-white/10"
-              }`}
+              }
               onClick={() => toggleFilter(filter)}
             >
               {filter}
