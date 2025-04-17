@@ -32,6 +32,15 @@ export const newUser = async (data: NewUserData) => {
   }
 };
 
-export const updateUser = async (userId: string, data: Partial<NewUserData>) => {
-  return await httpPut(`${BASE_ENDPOINT}/${userId}`, data);
+export const updateUser = async (
+  userId: string,
+  data: Partial<NewUserData>,
+  token: string
+) => {
+  
+  return await httpPut(`${BASE_ENDPOINT}/${userId}`, data, { 
+    headers: { 
+      'Authorization': `Bearer ${token}` 
+    } 
+  });
 };

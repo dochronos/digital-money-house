@@ -7,7 +7,8 @@ import { getTokenFromCookie } from "@/utils/getTokenFromCookie";
 import Link from "next/link";
 
 export default async function CardsPage() {
-  const token = getTokenFromCookie();
+  
+  const token = await getTokenFromCookie();
   const accountData = await getAccount(token);
   const accountId = accountData.id;
   const cardsList = await getAllCards(accountId, token);
