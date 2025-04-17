@@ -3,7 +3,7 @@ import { getAccount } from "@/services/account.service";
 import { getTokenFromCookie } from "@/utils/getTokenFromCookie";
 
 export default async function AddMoneyBankPage() {
-  const token = getTokenFromCookie();
+  const token = await getTokenFromCookie();
   const accountData = await getAccount(token);
 
   return (
