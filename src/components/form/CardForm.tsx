@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormError } from "@/components/ui/FormError";
-import { useCardStore } from "@/store/cardstore";
+import { useCardStore } from "@/store/cardStore";
 import { toast } from "sonner";
 
 export const CardForm = () => {
