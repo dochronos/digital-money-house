@@ -5,16 +5,22 @@ import UserCards from "@/components/cards/UserCards";
 import { getAllCards } from "@/services/cards.service";
 import { CardType } from "@/types/card.types";
 import Loader from "@/components/common/Loader";
+import { useAuth } from "@/context/authContext";
 
 const CardsListPage = () => {
   const [cards, setCards] = useState<CardType[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const accountId = 1; // 🧪 Reemplazar con lógica real
-  const token = "Bearer tu-token-aqui"; // 🔐 Reemplazar con lógica real
+  const { token, accountId } = useAuth();
 
   useEffect(() => {
     const fetchCards = async () => {
+      if (!accountId || !token) {
+        console.warn("No hay token o accountId en contexto");
+        setLoading(false);
+        return;
+      }
+
       try {
         const fetchedCards = await getAllCards(accountId, token);
         setCards(fetchedCards);
@@ -26,7 +32,7 @@ const CardsListPage = () => {
     };
 
     fetchCards();
-  }, []);
+  }, [accountId, token]);
 
   if (loading) {
     return (
@@ -34,6 +40,10 @@ const CardsListPage = () => {
         <Loader />
       </div>
     );
+  }
+
+  if (!accountId || !token) {
+    return <p className="text-center text-red-500">Debe iniciar sesión para ver sus tarjetas.</p>;
   }
 
   return (
