@@ -1,11 +1,8 @@
-import Footer from "@/components/layout/Footer";
-import Sidebar from "@/components/layout/Sidebar";
-import HeaderLayout from "@/components/layout/HeaderLayout";
 import { Open_Sans } from "next/font/google";
 import { Metadata } from "next";
 import "./globals.css";
-
-import { AuthProvider } from "@/context/authContext"; // <-- Importa el provider
+import { AuthProvider } from "@/context/authContext";
+import Footer from "@/components/layout/Footer";
 
 const openSans = Open_Sans({
   weight: ["300", "400", "500", "600", "700", "800"],
@@ -29,18 +26,11 @@ export default function RootLayout({
         className={`w-full min-h-screen bg-dark1 text-white ${openSans.className}`}
       >
         <AuthProvider>
-          <div className="flex flex-col md:flex-row min-h-screen">
-            {/* Sidebar */}
-            <aside className="w-full md:w-64 bg-green">
-              <Sidebar />
-            </aside>
-
-            {/* Main content */}
-            <div className="flex flex-col flex-1">
-              <HeaderLayout />
-              <main className="flex-1 p-4 md:p-8">{children}</main>
-              <Footer />
-            </div>
+          <div className="flex flex-col min-h-screen">
+            <main className="flex-grow w-full overflow-x-hidden">
+              {children}
+            </main>
+            <Footer />
           </div>
         </AuthProvider>
       </body>

@@ -24,12 +24,15 @@ export default async function DashboardLayout({
         userName={`${userData.firstname} ${userData.lastname}`}
       />
 
-      <main className="w-full p-5 flex flex-col grow md:flex-row bg-gray1 md:p-0 xl:p-0">
-        <aside className="hidden md:bg-green md:block md:w-2/5 xl:w-1/5 ">
+      <main className="w-full flex flex-col grow md:flex-row bg-gray1 overflow-x-hidden">
+        {/* Sidebar en pantallas medianas en adelante */}
+        <aside className="hidden md:block md:bg-green md:w-2/5 xl:w-1/5">
           <Sidebar />
         </aside>
 
-        <div className=" w-full gap-5 md:px-12 md:py-14 xl:px-20 xl:py-10 flex-col flex">
+        {/* Contenido principal */}
+        <div className="w-full gap-5 md:px-12 md:py-14 xl:px-20 xl:py-10 flex-col flex">
+          {/* Breadcrumb solo visible en móviles */}
           <div className="w-full flex md:hidden">
             <Breadcrumb />
           </div>

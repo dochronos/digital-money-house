@@ -19,32 +19,39 @@ const Sidebar = () => {
   const router = useRouter();
 
   const logoutHandle = () => {
-    localStorage.removeItem("authToken");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("authToken");
+    }
     Cookies.remove("authToken");
     router.push("/");
   };
 
   return (
-    <nav className="w-full md:w-64 p-6 bg-green text-dark1 flex flex-col gap-4 min-h-screen">
+    <nav
+      role="navigation"
+      aria-label="Menú lateral"
+      className="w-full md:w-64 p-6 bg-green text-dark1 flex flex-col gap-4 min-h-screen"
+    >
       <div className="flex flex-col gap-3">
-        {MENU_ITEMS.map((item) => (
-          <Link
-            key={item.path}
-            href={item.path}
-            className={clsx(
-              "text-lg transition-colors duration-150 hover:text-black",
-              {
-                "font-bold text-black": pathname === item.path,
-                "font-medium": pathname !== item.path,
-              }
-            )}
-          >
-            {item.name}
-          </Link>
-        ))}
+        {MENU_ITEMS.map((item) => {
+          const isActive = pathname === item.path;
+          return (
+            <Link
+              key={item.path}
+              href={item.path}
+              aria-current={isActive ? "page" : undefined}
+              className={clsx(
+                "text-lg transition-colors duration-150 hover:text-black",
+                isActive ? "font-bold text-black" : "font-medium"
+              )}
+            >
+              {item.name}
+            </Link>
+          );
+        })}
       </div>
 
-      <div className="mt-auto pt-6 border-t border-dark1/20">
+      <div className="mt-auto pt-6 border-t border-dark1/30">
         <button
           onClick={logoutHandle}
           className="text-lg font-medium text-dark1/60 hover:text-black transition-colors duration-150"
@@ -58,4 +65,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-

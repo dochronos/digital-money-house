@@ -2,11 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: 'Open Sans', sans-serif;
+/* Asegura que el box-sizing no rompa el layout */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-/* Estilo global para el scroll */
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  width: 100%;
+  overflow-x: hidden;
+  min-height: 100vh;
 }
